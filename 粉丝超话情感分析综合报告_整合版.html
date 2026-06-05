@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>粉丝超话情感分析综合报告</title>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/v6/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 20px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .chart {
+            width: 100%;
+            height: 350px;
+        }
+        .large-chart {
+            width: 100%;
+            height: 600px;
+        }
+        .wordcloud-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .wordcloud-img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .category-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .summary {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .summary-card {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .summary-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .summary-card .score {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .chart-small {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>粉丝超话情感分析综合报告</h1>
+        <p>包含情感得分对比分析、20个超话情感分布、堆叠柱状图、箱线图及词云分析</p>
+    </div>
+    
+    <!-- 情感分布饼图（按分类排列） -->
+    <div class="section">
+        <div class="section-title">各超话情感分布饼图</div>
+
+        <div class="category-section">
+            <div class="category-title">偶像</div>
+            <div class="charts-grid">
+
+                <div class="chart-container">
+                    <div id="pie_王一博" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_贺峻霖" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_徐明浩" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_宋雨琦" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_虞书欣" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_鞠婧祎" class="chart"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="category-section">
+            <div class="category-title">演员</div>
+            <div class="charts-grid">
+
+                <div class="chart-container">
+                    <div id="pie_朱一龙" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_张凌赫" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_王安宇" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_赵丽颖" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_赵露思" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_迪丽热巴" class="chart"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="category-section">
+            <div class="category-title">歌手</div>
+            <div class="charts-grid">
+
+                <div class="chart-container">
+                    <div id="pie_周杰伦" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_黄子弘凡" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_邓紫棋" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_单依纯" class="chart"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="category-section">
+            <div class="category-title">体育明星</div>
+            <div class="charts-grid">
+
+                <div class="chart-container">
+                    <div id="pie_苏炳添" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_王楚钦" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_孙颖莎" class="chart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <div id="pie_谷爱凌" class="chart"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- 情感得分对比分析 -->
+    <div class="section">
+        <div class="section-title">情感得分对比分析</div>
+        
+        <div class="summary">
+            <div class="summary-card">
+                <h3>总体平均得分</h3>
+                <div class="score">0.7102</div>
+            </div>
+        </div>
+        
+        <!-- 四个分类对比 -->
+        <div style="margin-bottom: 30px;">
+            <div style="font-size: 16px; font-weight: bold; color: #667eea; margin-bottom: 15px;">四个分类平均得分对比</div>
+            <div id="chart_category" style="width: 100%; height: 500px;"></div>
+        </div>
+        
+        <!-- 各分类内明星对比 -->
+        <div style="margin-bottom: 30px;">
+            <div style="font-size: 16px; font-weight: bold; color: #667eea; margin-bottom: 15px;">各分类内明星得分对比</div>
+            <div class="charts-row">
+                <div id="chart_idol" class="chart-small"></div>
+                <div id="chart_actor" class="chart-small"></div>
+            </div>
+            <div class="charts-row" style="margin-top: 20px;">
+                <div id="chart_singer" class="chart-small"></div>
+                <div id="chart_sports" class="chart-small"></div>
+            </div>
+        </div>
+        
+        <!-- 所有明星排名 -->
+        <div>
+            <div style="font-size: 16px; font-weight: bold; color: #667eea; margin-bottom: 15px;">所有明星情感得分排名</div>
+            <div id="chart_ranking" style="width: 100%; height: 500px;"></div>
+        </div>
+    </div>
+    
+    <!-- 堆叠柱状图 -->
+    <div class="section">
+        <div class="section-title">各明星情感分布堆叠柱状图</div>
+        <div id="chart_stacked" class="large-chart"></div>
+    </div>
+    
+    <!-- 箱线图 -->
+    <div class="section">
+        <div class="section-title">各明星情感得分分布箱线图</div>
+        <div id="chart_boxplot" class="large-chart"></div>
+    </div>
+    
+    <!-- 词云 -->
+    <div class="section">
+        <div class="section-title">情感词云分析</div>
+        <div class="wordcloud-container">
+            <img src="正面词云.png" alt="正面词云" class="wordcloud-img">
+            <img src="情感词云对比图.png" alt="词云对比" class="wordcloud-img">
+            <img src="负面词云.png" alt="负面词云" class="wordcloud-img">
+        </div>
+    </div>
+    
+    <script>
+        // 情感得分对比分析图表
+        var chart_category = echarts.init(document.getElementById('chart_category'), 'light');
+        chart_category.setOption({"animation": true, "animationThreshold": 2000, "animationDuration": 1000, "animationEasing": "cubicOut", "animationDelay": 0, "animationDurationUpdate": 300, "animationEasingUpdate": "cubicOut", "animationDelayUpdate": 0, "aria": {"enabled": false}, "series": [{"type": "bar", "name": "平均情感得分", "legendHoverLink": true, "data": [71.64, 74.48, 57.55, 78.37], "realtimeSort": false, "showBackground": false, "stackStrategy": "samesign", "cursor": "pointer", "barMinHeight": 0, "barCategoryGap": "20%", "barGap": "30%", "large": false, "largeThreshold": 400, "seriesLayoutBy": "column", "datasetIndex": 0, "clip": true, "zlevel": 0, "z": 2, "label": {"show": true, "position": "top", "margin": 8, "formatter": "{c}%", "richInheritPlainLabel": true, "valueAnimation": false}, "markLine": {"silent": false, "precision": 2, "label": {"show": true, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "data": [{"name": "总体平均", "yAxis": 71.01844588504076}]}, "rippleEffect": {"show": true, "brushType": "stroke", "scale": 2.5, "period": 4}}], "legend": [{"data": ["平均情感得分"], "selected": {}, "show": true, "padding": 5, "itemGap": 10, "itemWidth": 25, "itemHeight": 14, "backgroundColor": "transparent", "borderColor": "#ccc", "borderRadius": 0, "pageButtonItemGap": 5, "pageButtonPosition": "end", "pageFormatter": "{current}/{total}", "pageIconColor": "#2f4554", "pageIconInactiveColor": "#aaa", "pageIconSize": 15, "animationDurationUpdate": 800, "selector": false, "selectorPosition": "auto", "selectorItemGap": 7, "selectorButtonGap": 10, "triggerEvent": false}], "tooltip": {"show": true, "trigger": "axis", "triggerOn": "mousemove|click", "axisPointer": {"type": "line"}, "showContent": true, "alwaysShowContent": false, "showDelay": 0, "hideDelay": 100, "enterable": false, "confine": false, "appendToBody": false, "transitionDuration": 0.4, "displayTransition": true, "formatter": "{b}: {c}%", "textStyle": {"fontSize": 14, "richInheritPlainLabel": true}, "borderWidth": 0, "padding": 5, "order": "seriesAsc"}, "xAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "data": ["偶像", "演员", "歌手", "体育明星"], "type": "category"}], "yAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false, "formatter": "{value}%"}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "type": "value"}], "grid": [{"show": false, "zlevel": 0, "z": 0, "left": "3%", "top": "4%", "right": "4%", "bottom": "3%", "containLabel": true, "backgroundColor": "transparent", "borderWidth": 1, "shadowColor": "rgba(0, 0, 0, 0.5)", "shadowBlur": 10, "shadowOffsetX": 0, "shadowOffsetY": 0}]});
+
+        var chart_idol = echarts.init(document.getElementById('chart_idol'), 'light');
+        chart_idol.setOption({"animation": true, "animationThreshold": 2000, "animationDuration": 1000, "animationEasing": "cubicOut", "animationDelay": 0, "animationDurationUpdate": 300, "animationEasingUpdate": "cubicOut", "animationDelayUpdate": 0, "aria": {"enabled": false}, "series": [{"type": "bar", "name": "情感得分", "legendHoverLink": true, "data": [49.16, 61.35, 94.33, 88.34, 89.13, 47.51], "realtimeSort": false, "showBackground": false, "stackStrategy": "samesign", "cursor": "pointer", "barMinHeight": 0, "barCategoryGap": "20%", "barGap": "30%", "large": false, "largeThreshold": 400, "seriesLayoutBy": "column", "datasetIndex": 0, "clip": true, "zlevel": 0, "z": 2, "label": {"show": true, "position": "top", "margin": 8, "formatter": "{c}%", "richInheritPlainLabel": true, "valueAnimation": false}}], "legend": [{"data": ["情感得分"], "selected": {}, "show": true, "padding": 5, "itemGap": 10, "itemWidth": 25, "itemHeight": 14, "backgroundColor": "transparent", "borderColor": "#ccc", "borderRadius": 0, "pageButtonItemGap": 5, "pageButtonPosition": "end", "pageFormatter": "{current}/{total}", "pageIconColor": "#2f4554", "pageIconInactiveColor": "#aaa", "pageIconSize": 15, "animationDurationUpdate": 800, "selector": false, "selectorPosition": "auto", "selectorItemGap": 7, "selectorButtonGap": 10, "triggerEvent": false}], "tooltip": {"show": true, "trigger": "axis", "triggerOn": "mousemove|click", "axisPointer": {"type": "line"}, "showContent": true, "alwaysShowContent": false, "showDelay": 0, "hideDelay": 100, "enterable": false, "confine": false, "appendToBody": false, "transitionDuration": 0.4, "displayTransition": true, "formatter": "{b}: {c}%", "textStyle": {"fontSize": 14, "richInheritPlainLabel": true}, "borderWidth": 0, "padding": 5, "order": "seriesAsc"}, "xAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 15, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "data": ["王一博", "贺峻霖", "徐明浩", "宋雨琦", "虞书欣", "鞠婧祎"], "type": "category"}], "yAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false, "formatter": "{value}%"}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "type": "value"}], "grid": [{"show": false, "zlevel": 0, "z": 0, "left": "3%", "top": "4%", "right": "4%", "bottom": "3%", "containLabel": true, "backgroundColor": "transparent", "borderWidth": 1, "shadowColor": "rgba(0, 0, 0, 0.5)", "shadowBlur": 10, "shadowOffsetX": 0, "shadowOffsetY": 0}], "title": [{"text": "偶像分类", "left": "center", "top": "5", "textStyle": {"fontSize": 14}}]});
+
+        var chart_actor = echarts.init(document.getElementById('chart_actor'), 'light');
+        chart_actor.setOption({"animation": true, "animationThreshold": 2000, "animationDuration": 1000, "animationEasing": "cubicOut", "animationDelay": 0, "animationDurationUpdate": 300, "animationEasingUpdate": "cubicOut", "animationDelayUpdate": 0, "aria": {"enabled": false}, "series": [{"type": "bar", "name": "情感得分", "legendHoverLink": true, "data": [84.48, 53.45, 90.86, 91.34, 52.66, 74.07], "realtimeSort": false, "showBackground": false, "stackStrategy": "samesign", "cursor": "pointer", "barMinHeight": 0, "barCategoryGap": "20%", "barGap": "30%", "large": false, "largeThreshold": 400, "seriesLayoutBy": "column", "datasetIndex": 0, "clip": true, "zlevel": 0, "z": 2, "label": {"show": true, "position": "top", "margin": 8, "formatter": "{c}%", "richInheritPlainLabel": true, "valueAnimation": false}}], "legend": [{"data": ["情感得分"], "selected": {}, "show": true, "padding": 5, "itemGap": 10, "itemWidth": 25, "itemHeight": 14, "backgroundColor": "transparent", "borderColor": "#ccc", "borderRadius": 0, "pageButtonItemGap": 5, "pageButtonPosition": "end", "pageFormatter": "{current}/{total}", "pageIconColor": "#2f4554", "pageIconInactiveColor": "#aaa", "pageIconSize": 15, "animationDurationUpdate": 800, "selector": false, "selectorPosition": "auto", "selectorItemGap": 7, "selectorButtonGap": 10, "triggerEvent": false}], "tooltip": {"show": true, "trigger": "axis", "triggerOn": "mousemove|click", "axisPointer": {"type": "line"}, "showContent": true, "alwaysShowContent": false, "showDelay": 0, "hideDelay": 100, "enterable": false, "confine": false, "appendToBody": false, "transitionDuration": 0.4, "displayTransition": true, "formatter": "{b}: {c}%", "textStyle": {"fontSize": 14, "richInheritPlainLabel": true}, "borderWidth": 0, "padding": 5, "order": "seriesAsc"}, "xAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 15, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "data": ["朱一龙", "张凌赫", "王安宇", "赵丽颖", "赵露思", "迪丽热巴"], "type": "category"}], "yAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false, "formatter": "{value}%"}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "type": "value"}], "grid": [{"show": false, "zlevel": 0, "z": 0, "left": "3%", "top": "4%", "right": "4%", "bottom": "3%", "containLabel": true, "backgroundColor": "transparent", "borderWidth": 1, "shadowColor": "rgba(0, 0, 0, 0.5)", "shadowBlur": 10, "shadowOffsetX": 0, "shadowOffsetY": 0}], "title": [{"text": "演员分类", "left": "center", "top": "5", "textStyle": {"fontSize": 14}}]});
+
+        var chart_singer = echarts.init(document.getElementById('chart_singer'), 'light');
+        chart_singer.setOption({"animation": true, "animationThreshold": 2000, "animationDuration": 1000, "animationEasing": "cubicOut", "animationDelay": 0, "animationDurationUpdate": 300, "animationEasingUpdate": "cubicOut", "animationDelayUpdate": 0, "aria": {"enabled": false}, "series": [{"type": "bar", "name": "情感得分", "legendHoverLink": true, "data": [46.04, 71.18, 56.28, 56.69], "realtimeSort": false, "showBackground": false, "stackStrategy": "samesign", "cursor": "pointer", "barMinHeight": 0, "barCategoryGap": "20%", "barGap": "30%", "large": false, "largeThreshold": 400, "seriesLayoutBy": "column", "datasetIndex": 0, "clip": true, "zlevel": 0, "z": 2, "label": {"show": true, "position": "top", "margin": 8, "formatter": "{c}%", "richInheritPlainLabel": true, "valueAnimation": false}}], "legend": [{"data": ["情感得分"], "selected": {}, "show": true, "padding": 5, "itemGap": 10, "itemWidth": 25, "itemHeight": 14, "backgroundColor": "transparent", "borderColor": "#ccc", "borderRadius": 0, "pageButtonItemGap": 5, "pageButtonPosition": "end", "pageFormatter": "{current}/{total}", "pageIconColor": "#2f4554", "pageIconInactiveColor": "#aaa", "pageIconSize": 15, "animationDurationUpdate": 800, "selector": false, "selectorPosition": "auto", "selectorItemGap": 7, "selectorButtonGap": 10, "triggerEvent": false}], "tooltip": {"show": true, "trigger": "axis", "triggerOn": "mousemove|click", "axisPointer": {"type": "line"}, "showContent": true, "alwaysShowContent": false, "showDelay": 0, "hideDelay": 100, "enterable": false, "confine": false, "appendToBody": false, "transitionDuration": 0.4, "displayTransition": true, "formatter": "{b}: {c}%", "textStyle": {"fontSize": 14, "richInheritPlainLabel": true}, "borderWidth": 0, "padding": 5, "order": "seriesAsc"}, "xAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 15, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "data": ["周杰伦", "黄子弘凡", "邓紫棋", "单依纯"], "type": "category"}], "yAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false, "formatter": "{value}%"}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "type": "value"}], "grid": [{"show": false, "zlevel": 0, "z": 0, "left": "3%", "top": "4%", "right": "4%", "bottom": "3%", "containLabel": true, "backgroundColor": "transparent", "borderWidth": 1, "shadowColor": "rgba(0, 0, 0, 0.5)", "shadowBlur": 10, "shadowOffsetX": 0, "shadowOffsetY": 0}], "title": [{"text": "歌手分类", "left": "center", "top": "5", "textStyle": {"fontSize": 14}}]});
+
+        var chart_sports = echarts.init(document.getElementById('chart_sports'), 'light');
+        chart_sports.setOption({"animation": true, "animationThreshold": 2000, "animationDuration": 1000, "animationEasing": "cubicOut", "animationDelay": 0, "animationDurationUpdate": 300, "animationEasingUpdate": "cubicOut", "animationDelayUpdate": 0, "aria": {"enabled": false}, "series": [{"type": "bar", "name": "情感得分", "legendHoverLink": true, "data": [93.85, 81.67, 64.45, 73.53], "realtimeSort": false, "showBackground": false, "stackStrategy": "samesign", "cursor": "pointer", "barMinHeight": 0, "barCategoryGap": "20%", "barGap": "30%", "large": false, "largeThreshold": 400, "seriesLayoutBy": "column", "datasetIndex": 0, "clip": true, "zlevel": 0, "z": 2, "label": {"show": true, "position": "top", "margin": 8, "formatter": "{c}%", "richInheritPlainLabel": true, "valueAnimation": false}}], "legend": [{"data": ["情感得分"], "selected": {}, "show": true, "padding": 5, "itemGap": 10, "itemWidth": 25, "itemHeight": 14, "backgroundColor": "transparent", "borderColor": "#ccc", "borderRadius": 0, "pageButtonItemGap": 5, "pageButtonPosition": "end", "pageFormatter": "{current}/{total}", "pageIconColor": "#2f4554", "pageIconInactiveColor": "#aaa", "pageIconSize": 15, "animationDurationUpdate": 800, "selector": false, "selectorPosition": "auto", "selectorItemGap": 7, "selectorButtonGap": 10, "triggerEvent": false}], "tooltip": {"show": true, "trigger": "axis", "triggerOn": "mousemove|click", "axisPointer": {"type": "line"}, "showContent": true, "alwaysShowContent": false, "showDelay": 0, "hideDelay": 100, "enterable": false, "confine": false, "appendToBody": false, "transitionDuration": 0.4, "displayTransition": true, "formatter": "{b}: {c}%", "textStyle": {"fontSize": 14, "richInheritPlainLabel": true}, "borderWidth": 0, "padding": 5, "order": "seriesAsc"}, "xAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 15, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "data": ["苏炳添", "王楚钦", "孙颖莎", "谷爱凌"], "type": "category"}], "yAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false, "formatter": "{value}%"}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "type": "value"}], "grid": [{"show": false, "zlevel": 0, "z": 0, "left": "3%", "top": "4%", "right": "4%", "bottom": "3%", "containLabel": true, "backgroundColor": "transparent", "borderWidth": 1, "shadowColor": "rgba(0, 0, 0, 0.5)", "shadowBlur": 10, "shadowOffsetX": 0, "shadowOffsetY": 0}], "title": [{"text": "体育明星分类", "left": "center", "top": "5", "textStyle": {"fontSize": 14}}]});
+
+        var chart_ranking = echarts.init(document.getElementById('chart_ranking'), 'light');
+        chart_ranking.setOption({"animation": true, "animationThreshold": 2000, "animationDuration": 1000, "animationEasing": "cubicOut", "animationDelay": 0, "animationDurationUpdate": 300, "animationEasingUpdate": "cubicOut", "animationDelayUpdate": 0, "aria": {"enabled": false}, "series": [{"type": "bar", "name": "情感得分", "legendHoverLink": true, "data": [94.33, 93.85, 91.34, 90.86, 89.13, 88.34, 84.48, 81.67, 74.07, 73.53, 71.18, 64.45, 61.35, 56.69, 56.28, 53.45, 52.66, 49.16, 47.51, 46.04], "realtimeSort": false, "showBackground": false, "stackStrategy": "samesign", "cursor": "pointer", "barMinHeight": 0, "barCategoryGap": "20%", "barGap": "30%", "large": false, "largeThreshold": 400, "seriesLayoutBy": "column", "datasetIndex": 0, "clip": true, "zlevel": 0, "z": 2, "label": {"show": true, "position": "right", "margin": 8, "formatter": "{c}%", "richInheritPlainLabel": true, "valueAnimation": false}, "markLine": {"silent": false, "precision": 2, "label": {"show": true, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "data": [{"name": "总体平均", "yAxis": 71.01844588504076}]}, "rippleEffect": {"show": true, "brushType": "stroke", "scale": 2.5, "period": 4}}], "legend": [{"data": ["情感得分"], "selected": {}, "show": true, "padding": 5, "itemGap": 10, "itemWidth": 25, "itemHeight": 14, "backgroundColor": "transparent", "borderColor": "#ccc", "borderRadius": 0, "pageButtonItemGap": 5, "pageButtonPosition": "end", "pageFormatter": "{current}/{total}", "pageIconColor": "#2f4554", "pageIconInactiveColor": "#aaa", "pageIconSize": 15, "animationDurationUpdate": 800, "selector": false, "selectorPosition": "auto", "selectorItemGap": 7, "selectorButtonGap": 10, "triggerEvent": false}], "tooltip": {"show": true, "trigger": "axis", "triggerOn": "mousemove|click", "axisPointer": {"type": "line"}, "showContent": true, "alwaysShowContent": false, "showDelay": 0, "hideDelay": 100, "enterable": false, "confine": false, "appendToBody": false, "transitionDuration": 0.4, "displayTransition": true, "formatter": "{b}: {c}%", "textStyle": {"fontSize": 14, "richInheritPlainLabel": true}, "borderWidth": 0, "padding": 5, "order": "seriesAsc"}, "xAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false, "formatter": "{value}%"}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "type": "value"}], "yAxis": [{"show": true, "scale": false, "nameLocation": "end", "nameGap": 15, "nameTruncate": {}, "nameMoveOverlap": true, "axisLabel": {"show": true, "rotate": 0, "margin": 8, "richInheritPlainLabel": true, "valueAnimation": false}, "axisTick": {"show": true, "alignWithLabel": false, "interval": "auto", "length": 5, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisLine": {"show": true, "onZero": true, "onZeroAxisIndex": 0, "lineStyle": {"show": true, "width": 1, "opacity": 1, "curveness": 0, "type": "solid", "color": "#333", "dashOffset": 0, "cap": "butt", "join": "miter", "miterLimit": 10}}, "axisPointer": {"show": false, "type": "line", "snap": false, "triggerTooltip": true, "value": null, "status": "hide", "handle": {"show": false, "size": 45, "margin": 50, "color": "#333", "throttle": 40}}, "zlevel": 0, "z": 0, "data": ["徐明浩", "苏炳添", "赵丽颖", "王安宇", "虞书欣", "宋雨琦", "朱一龙", "王楚钦", "迪丽热巴", "谷爱凌", "黄子弘凡", "孙颖莎", "贺峻霖", "单依纯", "邓紫棋", "张凌赫", "赵露思", "王一博", "鞠婧祎", "周杰伦"], "type": "category"}], "grid": [{"show": false, "zlevel": 0, "z": 0, "left": "3%", "top": "4%", "right": "4%", "bottom": "3%", "containLabel": true, "backgroundColor": "transparent", "borderWidth": 1, "shadowColor": "rgba(0, 0, 0, 0.5)", "shadowBlur": 10, "shadowOffsetX": 0, "shadowOffsetY": 0}]});
+
+        // 情感分布饼图
+        var pie_王一博 = echarts.init(document.getElementById('pie_王一博'), 'light');
+        pie_王一博.setOption({"title": {"text": "\u738b\u4e00\u535a\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 507\u6761 | \u5e73\u5747: 0.49", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 234, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 32, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 241, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 234, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 32, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 241, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_贺峻霖 = echarts.init(document.getElementById('pie_贺峻霖'), 'light');
+        pie_贺峻霖.setOption({"title": {"text": "\u8d3a\u5cfb\u9716\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 458\u6761 | \u5e73\u5747: 0.61", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 259, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 40, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 159, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 259, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 40, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 159, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_徐明浩 = echarts.init(document.getElementById('pie_徐明浩'), 'light');
+        pie_徐明浩.setOption({"title": {"text": "\u5f90\u660e\u6d69\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 476\u6761 | \u5e73\u5747: 0.94", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 455, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 5, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 16, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 455, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 5, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 16, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_宋雨琦 = echarts.init(document.getElementById('pie_宋雨琦'), 'light');
+        pie_宋雨琦.setOption({"title": {"text": "\u5b8b\u96e8\u7426\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 453\u6761 | \u5e73\u5747: 0.88", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 409, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 12, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 32, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 409, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 12, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 32, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_虞书欣 = echarts.init(document.getElementById('pie_虞书欣'), 'light');
+        pie_虞书欣.setOption({"title": {"text": "\u865e\u4e66\u6b23\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 476\u6761 | \u5e73\u5747: 0.89", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 431, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 14, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 31, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 431, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 14, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 31, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_鞠婧祎 = echarts.init(document.getElementById('pie_鞠婧祎'), 'light');
+        pie_鞠婧祎.setOption({"title": {"text": "\u97a0\u5a67\u794e\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 470\u6761 | \u5e73\u5747: 0.48", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 191, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 49, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 230, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 191, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 49, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 230, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_朱一龙 = echarts.init(document.getElementById('pie_朱一龙'), 'light');
+        pie_朱一龙.setOption({"title": {"text": "\u6731\u4e00\u9f99\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 501\u6761 | \u5e73\u5747: 0.84", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 424, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 29, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 48, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 424, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 29, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 48, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_张凌赫 = echarts.init(document.getElementById('pie_张凌赫'), 'light');
+        pie_张凌赫.setOption({"title": {"text": "\u5f20\u51cc\u8d6b\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 485\u6761 | \u5e73\u5747: 0.53", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 236, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 38, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 211, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 236, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 38, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 211, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_王安宇 = echarts.init(document.getElementById('pie_王安宇'), 'light');
+        pie_王安宇.setOption({"title": {"text": "\u738b\u5b89\u5b87\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 491\u6761 | \u5e73\u5747: 0.91", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 450, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 27, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 14, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 450, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 27, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 14, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_赵丽颖 = echarts.init(document.getElementById('pie_赵丽颖'), 'light');
+        pie_赵丽颖.setOption({"title": {"text": "\u8d75\u4e3d\u9896\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 495\u6761 | \u5e73\u5747: 0.91", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 463, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 6, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 26, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 463, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 6, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 26, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_赵露思 = echarts.init(document.getElementById('pie_赵露思'), 'light');
+        pie_赵露思.setOption({"title": {"text": "\u8d75\u9732\u601d\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 462\u6761 | \u5e73\u5747: 0.53", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 219, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 44, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 199, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 219, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 44, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 199, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_迪丽热巴 = echarts.init(document.getElementById('pie_迪丽热巴'), 'light');
+        pie_迪丽热巴.setOption({"title": {"text": "\u8fea\u4e3d\u70ed\u5df4\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 500\u6761 | \u5e73\u5747: 0.74", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 362, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 28, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 110, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 362, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 28, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 110, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_周杰伦 = echarts.init(document.getElementById('pie_周杰伦'), 'light');
+        pie_周杰伦.setOption({"title": {"text": "\u5468\u6770\u4f26\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 492\u6761 | \u5e73\u5747: 0.46", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 189, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 38, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 265, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 189, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 38, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 265, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_黄子弘凡 = echarts.init(document.getElementById('pie_黄子弘凡'), 'light');
+        pie_黄子弘凡.setOption({"title": {"text": "\u9ec4\u5b50\u5f18\u51e1\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 500\u6761 | \u5e73\u5747: 0.71", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 348, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 44, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 108, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 348, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 44, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 108, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_邓紫棋 = echarts.init(document.getElementById('pie_邓紫棋'), 'light');
+        pie_邓紫棋.setOption({"title": {"text": "\u9093\u7d2b\u68cb\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 463\u6761 | \u5e73\u5747: 0.56", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 223, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 82, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 158, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 223, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 82, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 158, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_单依纯 = echarts.init(document.getElementById('pie_单依纯'), 'light');
+        pie_单依纯.setOption({"title": {"text": "\u5355\u4f9d\u7eaf\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 491\u6761 | \u5e73\u5747: 0.57", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 240, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 86, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 165, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 240, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 86, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 165, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_苏炳添 = echarts.init(document.getElementById('pie_苏炳添'), 'light');
+        pie_苏炳添.setOption({"title": {"text": "\u82cf\u70b3\u6dfb\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 469\u6761 | \u5e73\u5747: 0.94", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 445, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 6, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 18, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 445, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 6, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 18, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_王楚钦 = echarts.init(document.getElementById('pie_王楚钦'), 'light');
+        pie_王楚钦.setOption({"title": {"text": "\u738b\u695a\u94a6\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 500\u6761 | \u5e73\u5747: 0.82", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 402, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 45, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 53, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 402, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 45, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 53, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_孙颖莎 = echarts.init(document.getElementById('pie_孙颖莎'), 'light');
+        pie_孙颖莎.setOption({"title": {"text": "\u5b59\u9896\u838e\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 501\u6761 | \u5e73\u5747: 0.64", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 293, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 75, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 133, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 293, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 75, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 133, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var pie_谷爱凌 = echarts.init(document.getElementById('pie_谷爱凌'), 'light');
+        pie_谷爱凌.setOption({"title": {"text": "\u8c37\u7231\u51cc\u8d85\u8bdd\u60c5\u611f\u5206\u6790", "subtext": "\u603b\u6837\u672c: 505\u6761 | \u5e73\u5747: 0.74", "left": "center", "top": "5", "textStyle": {"fontSize": 12}}, "tooltip": {"trigger": "item", "formatter": "{a}<br/>{b}: {c}\u6761 ({d}%)"}, "legend": {"left": "left", "top": "20%", "orient": "vertical"}, "series": [{"name": "\u60c5\u611f\u5206\u5e03", "type": "pie", "radius": ["25%", "50%"], "center": ["50%", "55%"], "avoidLabelOverlap": false, "label": {"formatter": "{b}\\n{c}\u6761\\n({d}%)", "fontSize": 10}, "emphasis": {"label": {"show": true, "fontSize": 12, "fontWeight": "bold"}}, "data": [{"value": 359, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 33, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 113, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}, {"name": "\u7edf\u8ba1\u4fe1\u606f", "type": "pie", "radius": ["0%", "23%"], "center": ["50%", "55%"], "label": {"position": "inside", "formatter": "{b}", "fontSize": 8, "color": "#fff"}, "data": [{"value": 359, "name": "\u6b63\u5411", "itemStyle": {"color": "#5470c6"}}, {"value": 33, "name": "\u4e2d\u6027", "itemStyle": {"color": "#91cc75"}}, {"value": 113, "name": "\u8d1f\u5411", "itemStyle": {"color": "#fac858"}}]}]});
+
+        var chart_stacked = echarts.init(document.getElementById('chart_stacked'), 'light');
+        chart_stacked.setOption({"title": {"text": "\u5404\u660e\u661f\u60c5\u611f\u5206\u5e03", "left": "center", "top": 10}, "tooltip": {"trigger": "axis", "axisPointer": {"type": "shadow"}}, "grid": {"left": "3%", "right": "4%", "bottom": "15%", "top": "10%", "containLabel": true}, "xAxis": {"type": "category", "data": ["\u738b\u4e00\u535a", "\u8d3a\u5cfb\u9716", "\u5f90\u660e\u6d69", "\u5b8b\u96e8\u7426", "\u865e\u4e66\u6b23", "\u97a0\u5a67\u794e", "\u6731\u4e00\u9f99", "\u5f20\u51cc\u8d6b", "\u738b\u5b89\u5b87", "\u8d75\u4e3d\u9896", "\u8d75\u9732\u601d", "\u8fea\u4e3d\u70ed\u5df4", "\u5468\u6770\u4f26", "\u9ec4\u5b50\u5f18\u51e1", "\u9093\u7d2b\u68cb", "\u5355\u4f9d\u7eaf", "\u82cf\u70b3\u6dfb", "\u738b\u695a\u94a6", "\u5b59\u9896\u838e", "\u8c37\u7231\u51cc"], "axisLabel": {"rotate": 45, "fontSize": 11}, "axisLine": {"lineStyle": {"color": "#ddd"}}, "splitLine": {"show": false}}, "yAxis": {"type": "value", "name": "\u5e16\u5b50\u6570\u91cf", "axisLine": {"lineStyle": {"color": "#ddd"}}, "splitLine": {"lineStyle": {"color": "#eee", "type": "dashed"}}}, "series": [{"name": "\u6b63\u5411", "type": "bar", "stack": "total", "data": [234, 259, 455, 409, 431, 191, 424, 236, 450, 463, 219, 362, 189, 348, 223, 240, 445, 402, 293, 359], "itemStyle": {"color": "#5470c6"}}, {"name": "\u4e2d\u6027", "type": "bar", "stack": "total", "data": [32, 40, 5, 12, 14, 49, 29, 38, 27, 6, 44, 28, 38, 44, 82, 86, 6, 45, 75, 33], "itemStyle": {"color": "#91cc75"}}, {"name": "\u8d1f\u5411", "type": "bar", "stack": "total", "data": [241, 159, 16, 32, 31, 230, 48, 211, 14, 26, 199, 110, 265, 108, 158, 165, 18, 53, 133, 113], "itemStyle": {"color": "#fac858"}}]});
+        chart_stacked.on('mouseover', function(params) {
+            if (params.seriesName === '正向') {
+                var idx = params.dataIndex;
+                var name = chart_stacked.getOption().xAxis[0].data[idx];
+                var pos = stacked_config.series[0].data[idx];
+                var neu = stacked_config.series[1].data[idx];
+                var neg = stacked_config.series[2].data[idx];
+                chart_stacked.setOption({
+                    tooltip: {
+                        formatter: name + '<br/>正向: ' + pos + '条<br/>中性: ' + neu + '条<br/>负向: ' + neg + '条'
+                    }
+                });
+            }
+        });
+        var chart_boxplot = echarts.init(document.getElementById('chart_boxplot'), 'light');
+        chart_boxplot.setOption({"title": {"text": "\u5404\u660e\u661f\u60c5\u611f\u5f97\u5206\u5206\u5e03", "left": "center", "top": 10}, "tooltip": {"trigger": "axis", "axisPointer": {"type": "shadow"}}, "grid": {"left": "3%", "right": "4%", "bottom": "15%", "top": "10%", "containLabel": true}, "xAxis": {"type": "category", "data": ["\u738b\u4e00\u535a", "\u8d3a\u5cfb\u9716", "\u5f90\u660e\u6d69", "\u5b8b\u96e8\u7426", "\u865e\u4e66\u6b23", "\u97a0\u5a67\u794e", "\u6731\u4e00\u9f99", "\u5f20\u51cc\u8d6b", "\u738b\u5b89\u5b87", "\u8d75\u4e3d\u9896", "\u8d75\u9732\u601d", "\u8fea\u4e3d\u70ed\u5df4", "\u5468\u6770\u4f26", "\u9ec4\u5b50\u5f18\u51e1", "\u9093\u7d2b\u68cb", "\u5355\u4f9d\u7eaf", "\u82cf\u70b3\u6dfb", "\u738b\u695a\u94a6", "\u5b59\u9896\u838e", "\u8c37\u7231\u51cc"], "axisLabel": {"rotate": 45, "fontSize": 11}, "axisLine": {"lineStyle": {"color": "#ddd"}}, "splitLine": {"show": false}}, "yAxis": {"type": "value", "name": "\u60c5\u611f\u5f97\u5206", "min": 0, "max": 1, "axisLine": {"lineStyle": {"color": "#ddd"}}, "splitLine": {"lineStyle": {"color": "#eee", "type": "dashed"}}}, "series": [{"name": "\u60c5\u611f\u5f97\u5206", "type": "boxplot", "data": [[5.8153704074470625e-11, 0.03988319632575654, 0.44302916778343504, 0.9696262248383057, 1.0], [0.0, 0.19174818795570658, 0.761682689099013, 0.9933243226097433, 1.0], [0.0, 0.9715497908674396, 0.9992384463605906, 0.9999994619710114, 1.0], [7.056108974889952e-08, 0.8812416973498961, 0.990943214634503, 0.9998197867153623, 1.0], [0.0, 0.9176721166044236, 0.9971543866636703, 0.9999662055117772, 1.0], [1.6011167380813873e-07, 0.11208025872808991, 0.43674976744654037, 0.8533600679407678, 1.0], [1.0826894936144527e-12, 0.8186902218792453, 0.9701947559129712, 0.9993848724148012, 1.0], [1.0831205821126844e-08, 0.10534703905212262, 0.5632806359143618, 0.9849670146776338, 1.0], [5.100511955791198e-06, 0.9087473937556957, 0.9951641040104485, 0.9999724997821335, 1.0], [1.0831205821126844e-08, 0.9570328443607922, 0.9992724472573642, 0.9999992263557301, 1.0], [0.0, 0.09646489113227219, 0.5316405950948166, 0.9722598286398606, 1.0], [0.0, 0.541197375326534, 0.9736323113331568, 0.999997946533293, 1.0], [0.0, 0.07680780098897377, 0.32648059953156094, 0.9538615157513394, 1.0], [2.3681482936521725e-05, 0.49457932914814895, 0.8642487333471387, 0.9859372722614689, 1.0], [0.0, 0.27036622906300567, 0.5773455747857057, 0.8948921607267145, 1.0], [5.10702591327572e-15, 0.28564260407206465, 0.5835040148434105, 0.9065421708560906, 1.0], [4.440892098500626e-16, 0.9919870553974187, 0.9999659528165784, 0.9999999994800126, 1.0], [0.000926768777825604, 0.7129277540868203, 0.9778409960757903, 0.9997074222017301, 1.0], [1.7566305576810493e-06, 0.36986415196308775, 0.7626868560258901, 0.9690005321604133, 1.0], [4.286861976510181e-10, 0.4586333079024947, 0.9435684877763318, 0.9998190743008851, 1.0]], "itemStyle": {"color": "#667eea", "borderColor": "#667eea", "borderWidth": 2}, "boxWidth": 30, "whiskerWidth": 10, "medianWidth": 3}]});
+
+
+        // 响应窗口大小变化
+        window.addEventListener('resize', function() {
+            pie_王一博.resize();
+            pie_贺峻霖.resize();
+            pie_徐明浩.resize();
+            pie_宋雨琦.resize();
+            pie_虞书欣.resize();
+            pie_鞠婧祎.resize();
+            pie_朱一龙.resize();
+            pie_张凌赫.resize();
+            pie_王安宇.resize();
+            pie_赵丽颖.resize();
+            pie_赵露思.resize();
+            pie_迪丽热巴.resize();
+            pie_周杰伦.resize();
+            pie_黄子弘凡.resize();
+            pie_邓紫棋.resize();
+            pie_单依纯.resize();
+            pie_苏炳添.resize();
+            pie_王楚钦.resize();
+            pie_孙颖莎.resize();
+            pie_谷爱凌.resize();
+            chart_category.resize();
+            chart_idol.resize();
+            chart_actor.resize();
+            chart_singer.resize();
+            chart_sports.resize();
+            chart_ranking.resize();
+            chart_stacked.resize();
+            chart_boxplot.resize();
+        });
+    </script>
+</body>
+</html>
